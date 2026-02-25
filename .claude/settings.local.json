@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /c/visa_category && mvn spring-boot:run 2>&1)",
+      "Bash(cmd.exe:*)",
+      "Bash(powershell:*)",
+      "Bash(netstat:*)",
+      "Bash(cd:*)"
+    ]
+  }
+}

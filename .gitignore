@@ -1,0 +1,13 @@
+target/
+*.class
+*.jar
+*.war
+.mvn/
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+run.bat
+start.ps1
+maven-download/

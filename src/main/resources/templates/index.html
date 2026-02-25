@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Australia Visa Guide – Required Documents Checker</title>
+    <meta name="description" content="Find out exactly which documents you need for every Australian visa category. Student, Skilled Worker, Visitor, Partner, Working Holiday and more.">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇦🇺</text></svg>">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+    <div class="header-inner">
+        <div class="header-top">
+            <span class="flag">🇦🇺</span>
+            <a href="/" class="logo">Visa<span>Guide</span>.au</a>
+        </div>
+        <h1 class="hero-title">Australian Visa Document Checker</h1>
+        <p class="hero-subtitle">Find out exactly which documents you need to apply for any Australian visa — all in one place.</p>
+
+        <!-- Search Form -->
+        <form action="/" method="get" class="search-box">
+            <input
+                type="text"
+                name="q"
+                class="search-input"
+                placeholder="Search by visa name, subclass, or keyword..."
+                th:value="${searchQuery}"
+                autocomplete="off"
+            >
+            <button type="submit" class="search-btn">&#128269; Search</button>
+        </form>
+    </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="container">
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat">
+            <strong th:text="${totalCount}">0</strong> visa categories covered
+        </div>
+        <div class="stat">
+            <strong th:text="${categories.size()}">0</strong> visa types
+        </div>
+        <div class="stat">
+            Updated for <strong>2025–2026</strong>
+        </div>
+    </div>
+
+    <!-- Search Result Notice -->
+    <div th:if="${searchQuery != null and !searchQuery.isEmpty()}" class="search-notice">
+        Showing <strong th:text="${visas.size()}">0</strong> results for
+        &ldquo;<span th:text="${searchQuery}"></span>&rdquo;
+        &nbsp;&middot;&nbsp;
+        <a href="/">Clear search</a>
+    </div>
+
+    <!-- Category Filter Tabs (only shown when not searching) -->
+    <div th:if="${searchQuery == null or searchQuery.isEmpty()}" class="category-tabs">
+        <a href="/" th:class="${activeCategory == null} ? 'tab-btn active' : 'tab-btn'">
+            All Visas
+        </a>
+        <a th:each="cat : ${categories}"
+           th:href="@{'/?category=' + ${cat}}"
+           th:class="${activeCategory != null and activeCategory == cat} ? 'tab-btn active' : 'tab-btn'"
+           th:text="${cat}">
+        </a>
+    </div>
+
+    <!-- No Results -->
+    <div th:if="${visas.isEmpty()}" class="no-results">
+        <div class="icon">&#128269;</div>
+        <h3>No visas found</h3>
+        <p>Try a different search term or <a href="/">browse all visas</a>.</p>
+    </div>
+
+    <!-- Grouped Visa Sections (default view) -->
+    <div th:if="${searchQuery == null and activeCategory == null and !visas.isEmpty()}">
+        <div th:each="entry : ${grouped}">
+            <div class="section-title">
+                <span class="icon" th:utext="${entry.value[0].categoryIcon}"></span>
+                <span th:text="${entry.key}"></span>
+                <span style="font-size:0.85rem; font-weight:400; color:var(--text-muted);"
+                      th:text="'(' + ${entry.value.size()} + ')'"></span>
+            </div>
+            <div class="visa-grid">
+                <a th:each="visa : ${entry.value}"
+                   th:href="@{'/visa/' + ${visa.id}}"
+                   class="visa-card"
+                   th:title="${visa.name}">
+
+                    <div class="card-header">
+                        <span class="card-icon" th:utext="${visa.categoryIcon}"></span>
+                        <div class="card-titles">
+                            <span class="subclass-badge" th:text="${visa.subclass}"></span>
+                            <div class="card-name" th:text="${visa.name}"></div>
+                        </div>
+                    </div>
+
+                    <p class="card-desc" th:text="${visa.description}"></p>
+
+                    <div class="card-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Processing Time</span>
+                            <span class="meta-value" th:text="${visa.processingTime}"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Validity</span>
+                            <span class="meta-value" th:text="${visa.validity}"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Application Fee</span>
+                            <span class="meta-value" th:text="${visa.cost}"></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Documents</span>
+                            <span class="meta-value" th:text="${visa.documents.size()} + ' items'"></span>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="doc-count">
+                            <strong th:text="${visa.mandatoryCount}"></strong> required,
+                            <span th:text="${visa.optionalCount}"></span> optional
+                        </span>
+                        <span class="view-btn">View Checklist &#8594;</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flat List (search / category filter view) -->
+    <div th:if="${(searchQuery != null and !searchQuery.isEmpty()) or (activeCategory != null)}">
+        <div th:if="${!visas.isEmpty()}" class="visa-grid">
+            <a th:each="visa : ${visas}"
+               th:href="@{'/visa/' + ${visa.id}}"
+               class="visa-card">
+
+                <div class="card-header">
+                    <span class="card-icon" th:utext="${visa.categoryIcon}"></span>
+                    <div class="card-titles">
+                        <span class="subclass-badge" th:text="${visa.subclass}"></span>
+                        <div class="card-name" th:text="${visa.name}"></div>
+                    </div>
+                </div>
+
+                <p class="card-desc" th:text="${visa.description}"></p>
+
+                <div class="card-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Processing Time</span>
+                        <span class="meta-value" th:text="${visa.processingTime}"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Validity</span>
+                        <span class="meta-value" th:text="${visa.validity}"></span>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <span class="category-tag" th:text="${visa.category}"></span>
+                    <span class="view-btn">View Checklist &#8594;</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+        <strong>Disclaimer:</strong> This information is provided for general guidance purposes only and is current as of 2025–2026.
+        Visa requirements can change at any time. Always verify the latest requirements directly with the
+        <a href="https://immi.homeaffairs.gov.au" target="_blank" rel="noopener">Australian Department of Home Affairs</a>
+        before submitting your application. This website is not affiliated with the Australian Government.
+    </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+    <p>
+        <strong>VisaGuide.au</strong> &mdash; Your guide to Australian visa requirements.
+        <br>
+        Not affiliated with the Australian Government &middot;
+        Data sourced from <a href="https://immi.homeaffairs.gov.au" target="_blank" rel="noopener">immi.homeaffairs.gov.au</a>
+        &middot; Updated 2025–2026
+    </p>
+</footer>
+
+
+<script>
+    (function () {
+        var ws;
+        function connect() {
+            ws = new WebSocket('ws://localhost:35729/livereload');
+            ws.onmessage = function (msg) {
+                var data = JSON.parse(msg.data);
+                if (data.command === 'reload') location.reload();
+            };
+            ws.onclose = function () {
+                // Server restarted — wait then reload
+                setTimeout(function () { location.reload(); }, 2000);
+            };
+        }
+        connect();
+    })();
+</script>
+</body>
+</html>
