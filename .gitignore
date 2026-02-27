@@ -11,3 +11,8 @@ target/
 run.bat
 start.ps1
 maven-download/
+
+# Next.js
+.next/
+node_modules/
+.claude/
