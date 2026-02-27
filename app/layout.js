@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
         {children}
         <footer className="site-footer">
           <p>
-            <strong>VisaGuide.au</strong> &mdash; Your guide to Australian visa requirements.
+            <strong>VisaGuide</strong> &mdash; Your guide to Australian visa requirements.
             <br />
             Not affiliated with the Australian Government &middot; Data sourced from{" "}
             <a href="https://immi.homeaffairs.gov.au" target="_blank" rel="noopener">

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   const visa = visas.find((v) => v.id === p.id);
   if (!visa) return {};
   return {
-    title: `${visa.name} (${visa.subclass}) \u2013 Required Documents | VisaGuide.au`,
+    title: `${visa.name} (${visa.subclass}) \u2013 Required Documents | VisaGuide`,
   };
 }
 
