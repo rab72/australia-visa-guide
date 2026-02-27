@@ -53,7 +53,7 @@ export default async function Home({ searchParams }) {
           <div className="header-top">
             <span className="flag">🇦🇺</span>
             <Link href="/" className="logo">
-              Visa<span>Guide</span>.au
+              Visa<span>Guide</span>
             </Link>
           </div>
           <h1 className="hero-title">Australian Visa Document Checker</h1>

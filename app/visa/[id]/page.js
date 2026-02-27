@@ -29,7 +29,7 @@ export default async function VisaDetailPage({ params }) {
           <div className="header-top">
             <span className="flag">🇦🇺</span>
             <Link href="/" className="logo">
-              Visa<span>Guide</span>.au
+              Visa<span>Guide</span>
             </Link>
           </div>
         </div>
